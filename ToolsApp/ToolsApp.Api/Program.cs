@@ -1,9 +1,21 @@
+using Serilog;
+using Serilog.Events;
+
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Data;
+
+Log.Logger = new LoggerConfiguration()
+  .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+  .Enrich.FromLogContext()
+  .WriteTo.Console()
+  .CreateLogger();
+  
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Host.UseSerilog();
 
 builder.Services.AddSingleton<IColorsData, ColorsInMemoryData>();
 
