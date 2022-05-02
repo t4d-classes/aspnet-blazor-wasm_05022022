@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ToolsApp.Models\ToolsApp.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
 </Project>
