@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers
 {
   [ApiController]
-  [Route("[controller]")]
+  [Route("v1/[controller]")]
   public class WeatherForecastController : ControllerBase
   {
     private static readonly string[] Summaries = new[]
@@ -19,15 +20,15 @@ namespace ToolsApp.Api.Controllers
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    public ActionResult<IEnumerable<WeatherForecast>> Get()
     {
-      return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+      return Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast
       {
         Date = DateTime.Now.AddDays(index),
         TemperatureC = Random.Shared.Next(-20, 55),
         Summary = Summaries[Random.Shared.Next(Summaries.Length)]
       })
-      .ToArray();
+      .ToArray());
     }
   }
 }
