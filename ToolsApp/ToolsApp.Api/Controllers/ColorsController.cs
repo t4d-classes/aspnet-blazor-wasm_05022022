@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Core.Interfaces.Models;
+using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
 
@@ -93,6 +94,48 @@ public class ColorsController: ControllerBase
       _logger.LogError(exc, "One color failed.");
       throw new InternalServerErrorException();
     }
+  }
+
+  /// <summary>
+  /// Append a Color
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   POST /v1/colors
+  ///
+  ///   Request body is a JSON serialized NewColor object
+  ///
+  /// </remarks>
+  /// <response code="201">Created color</response>
+  /// <response code="400">Color was invalid.</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Color</returns>
+  [HttpPost]
+  [Consumes("application/json")]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(IColor), StatusCodes.Status201Created)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+  public async Task<ActionResult<IColor>> Append(
+    [FromBody] NewColor newColor
+  )
+  {
+    try
+    {
+      if (!ModelState.IsValid)
+      {
+        return BadRequest();
+      }
+
+      var color = await _colorsData.Append(newColor);
+      return Created($"/v1/colors/{color.Id}", color);
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One color failed.");
+      throw new InternalServerErrorException();
+    }    
   }
 
   /// <summary>
