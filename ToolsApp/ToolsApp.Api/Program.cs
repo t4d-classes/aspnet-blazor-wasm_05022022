@@ -23,7 +23,7 @@ builder.Services.AddSqlServer<ToolsAppContext>(
   builder.Configuration.GetConnectionString("App")
 );
 
-builder.Services.AddSingleton<IColorsData, ColorsSqlServerData>();
+builder.Services.AddScoped<IColorsData, ColorsSqlServerData>();
 builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
 
 builder.Services.AddControllers(options => {
