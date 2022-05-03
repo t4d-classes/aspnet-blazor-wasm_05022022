@@ -34,7 +34,7 @@ public class CarsController: ControllerBase
   [HttpGet]
   [Produces("application/json")]
   [ProducesResponseType(typeof(IEnumerable<ICar>), StatusCodes.Status200OK)]
-  public async Task<ActionResult<IEnumerable<Car>>> Get()
+  public async Task<ActionResult<IEnumerable<Car>>> All()
   {
     try
     {
@@ -46,6 +46,141 @@ public class CarsController: ControllerBase
       throw;
     }
   }
+
+  /// <summary>
+  /// Return a car for the given id
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   GET /v1/cars/1
+  ///
+  /// </remarks>
+  /// <param name="carId">Id of the car to retrieve</param>
+  /// <response code="200">A single car</response>
+  /// <response code="404">No car found for the specified id</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Car</returns>
+  [HttpGet("{carId:int}")]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(ICar), StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  public async Task<ActionResult<ICar>> One(int carId)
+  {
+    try
+    {
+      var car = await _carsData.One(carId);
+
+      if (car is null) {
+        var infoMessage = $"Unable to find car with id {carId}";
+        _logger.LogInformation(infoMessage);
+        return NotFound(infoMessage);
+      } else {
+        return Ok(car);
+      }
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One car failed.");
+      throw new InternalServerErrorException();
+    }
+  }
+
+
+  /// <summary>
+  /// Append a Car
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   POST /v1/cars
+  ///
+  ///   Request body is a JSON serialized NewCar object
+  ///
+  /// </remarks>
+  /// <response code="201">Created car</response>
+  /// <response code="400">Car was invalid.</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Car</returns>
+  [HttpPost]
+  [Consumes("application/json")]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(ICar), StatusCodes.Status201Created)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+  public async Task<ActionResult<ICar>> Append(
+    [FromBody] NewCar newCar
+  )
+  {
+    try
+    {
+      if (!ModelState.IsValid)
+      {
+        return BadRequest();
+      }
+
+      var car = await _carsData.Append(newCar);
+      return Created($"/v1/cars/{car.Id}", car);
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One car failed.");
+      throw new InternalServerErrorException();
+    }    
+  }
+
+  /// <summary>
+  /// Append a Car
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   POST /v1/cars
+  ///
+  ///   Request body is a JSON serialized NewCar object
+  ///
+  /// </remarks>
+  /// <response code="201">Created car</response>
+  /// <response code="400">Car was invalid.</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Car</returns>
+  [HttpPut("{carId:int}")]
+  [Consumes("application/json")]
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+  public async Task<ActionResult> Replace(int carId, [FromBody] Car car
+  )
+  {
+    try
+    {
+      if (!ModelState.IsValid || car is null)
+      {
+        return BadRequest();
+      }
+
+      if (carId != car.Id)
+      {
+        return BadRequest("car ids do not match");
+      }
+
+      await _carsData.Replace(car);
+
+      return NoContent();
+    }
+    catch (IndexOutOfRangeException exc)
+    {
+      var errorMessage = "Unable to find car to remove.";
+      _logger.LogError(exc, errorMessage);
+      return NotFound(errorMessage);
+    }    
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One car failed.");
+      throw new InternalServerErrorException();
+    }    
+  }  
 
   /// <summary>
   /// Remove a car by id.

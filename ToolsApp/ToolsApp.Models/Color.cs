@@ -11,5 +11,5 @@ public class NewColor: INewColor {
 
 public class Color: NewColor, IColor {
 
-  public int? Id { get; set; }
+  public int Id { get; set; }
 }

@@ -71,5 +71,22 @@ public class ColorsInMemoryData : IColorsData
     _colors.RemoveAt(colorIndex);
 
     return Task.CompletedTask;
+  }
+
+  public Task Replace(IColor color)
+  {
+    var colorDataModel = _mapper.Map<ColorDataModel>(color);
+
+    var colorIndex = _colors.FindIndex(c => c.Id == colorDataModel.Id);
+
+    if (colorIndex == -1)
+    {
+      throw new IndexOutOfRangeException("Color not found");
+    }    
+
+    _colors[colorIndex] = colorDataModel;
+
+    return Task.CompletedTask;
   }  
 }
+

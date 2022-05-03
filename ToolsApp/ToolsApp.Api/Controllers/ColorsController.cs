@@ -139,6 +139,59 @@ public class ColorsController: ControllerBase
   }
 
   /// <summary>
+  /// Append a Color
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   POST /v1/colors
+  ///
+  ///   Request body is a JSON serialized NewColor object
+  ///
+  /// </remarks>
+  /// <response code="201">Created color</response>
+  /// <response code="400">Color was invalid.</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Color</returns>
+  [HttpPut("{colorId:int}")]
+  [Consumes("application/json")]
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+  public async Task<ActionResult> Replace(int colorId, [FromBody] Color color
+  )
+  {
+    try
+    {
+      if (!ModelState.IsValid || color is null)
+      {
+        return BadRequest();
+      }
+
+      if (colorId != color.Id)
+      {
+        return BadRequest("color ids do not match");
+      }
+
+      await _colorsData.Replace(color);
+
+      return NoContent();
+    }
+    catch (IndexOutOfRangeException exc)
+    {
+      var errorMessage = "Unable to find color to remove.";
+      _logger.LogError(exc, errorMessage);
+      return NotFound(errorMessage);
+    }    
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One color failed.");
+      throw new InternalServerErrorException();
+    }    
+  }  
+
+  /// <summary>
   /// Remove a color by id.
   /// </summary>
   /// <remarks>

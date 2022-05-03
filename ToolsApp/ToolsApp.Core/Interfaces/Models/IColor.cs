@@ -8,5 +8,5 @@ public interface INewColor
 
 public interface IColor: INewColor
 {
-  int? Id {get; set;}
+  int Id {get; set;}
 }

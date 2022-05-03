@@ -8,5 +8,9 @@ public interface ICarsData
 
   Task<ICar?> One(int carId);
 
+  Task<ICar> Append(INewCar car);
+
   Task Remove(int carId);
+
+  Task Replace(ICar car);
 }
