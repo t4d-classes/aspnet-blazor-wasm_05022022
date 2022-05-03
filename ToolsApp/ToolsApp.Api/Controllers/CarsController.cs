@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using ToolsApp.Core.Interfaces.Data;
+using ToolsApp.Core.Interfaces.Models;
 using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
@@ -7,22 +9,41 @@ namespace ToolsApp.Api.Controllers;
 [Route("v1/[controller]")]
 public class CarsController: ControllerBase
 {
+  private ILogger _logger;
+  private ICarsData _carsData;
 
-  [HttpGet]
-  public ActionResult<IEnumerable<Car>> Get()
+  public CarsController(ICarsData carsData, ILogger<CarsController> logger)
   {
-    var cars = new List<Car> {
-      new() {
-        Id=1, Make="Ford", Model="Fusion Hybrid",
-        Year=2020, Color="Red", Price=45000,
-      },
-      new() {
-        Id=2, Make="Tesla", Model="S",
-        Year=2019, Color="Black", Price=120000,
-      },
-    };
+    _carsData = carsData;
+    _logger = logger;
+  }
 
-    return Ok(cars);
+  /// <summary>
+  /// Returns a list of cars
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   GET /v1/cars
+  ///
+  /// </remarks>
+  /// <response code="200">List of cars</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>List of Cars</returns>
+  [HttpGet]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(IEnumerable<ICar>), StatusCodes.Status200OK)]
+  public async Task<ActionResult<IEnumerable<Car>>> Get()
+  {
+    try
+    {
+      return Ok(await _carsData.All());
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "All cars failed.");
+      throw;
+    }
   }
 
 }

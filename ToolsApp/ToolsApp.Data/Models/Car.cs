@@ -1,8 +1,6 @@
-using ToolsApp.Core.Interfaces.Models;
+namespace ToolsApp.Data.Models;
 
-namespace ToolsApp.Models;
-
-public class Car: ICar {
+internal class Car {
 
   public int? Id { get; set; }
 

@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
 builder.Services.AddSingleton<IColorsData, ColorsInMemoryData>();
+builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

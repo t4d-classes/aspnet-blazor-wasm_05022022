@@ -1,6 +1,6 @@
 namespace ToolsApp.Data.Models;
 
-public class Color {
+internal class Color {
 
   public int? Id { get; set; }
 
