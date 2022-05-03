@@ -1,6 +1,6 @@
 using Serilog;
 using Serilog.Events;
-
+using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Data;
 
@@ -20,7 +20,11 @@ builder.Host.UseSerilog();
 builder.Services.AddSingleton<IColorsData, ColorsInMemoryData>();
 builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => {
+  options.Filters.Add<HttpResponseExceptionFilter>();
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

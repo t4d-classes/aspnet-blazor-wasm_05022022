@@ -36,4 +36,13 @@ public class ColorsInMemoryData : IColorsData
         .AsEnumerable<IColor>()
     );
   }
+
+  public Task<IColor?> One(int colorId)
+  {
+    return Task.FromResult(_colors
+      .Where(c => c.Id == colorId)
+      .Select(c => _mapper.Map<ColorDataModel, ColorModel>(c))
+      .Cast<IColor>()
+      .SingleOrDefault());
+  }
 }

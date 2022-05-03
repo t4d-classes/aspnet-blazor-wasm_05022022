@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Core.Interfaces.Models;
-using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
 
@@ -33,16 +33,65 @@ public class ColorsController: ControllerBase
   [HttpGet]
   [Produces("application/json")]
   [ProducesResponseType(typeof(IEnumerable<IColor>), StatusCodes.Status200OK)]
-  public async Task<ActionResult<IEnumerable<Color>>> Get()
+  public async Task<ActionResult<IEnumerable<IColor>>> All()
   {
     try
     {
+      // if you get paid by the hour
+      // var result = new ObjectResult(await _colorsData.All());
+      // result.StatusCode = StatusCodes.Status200OK;
+      // return result;
+
+      // if you are paid salary
+      // var result = new OkObjectResult(await _colorsData.All());
+      // return result;
+
+      // if you are a volunteer
       return Ok(await _colorsData.All());
     }
     catch(Exception exc)
     {
       _logger.LogError(exc, "All colors failed.");
       throw;
+    }
+  }
+
+  /// <summary>
+  /// Return a color for the given id
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   GET /v1/colors/1
+  ///
+  /// </remarks>
+  /// <param name="colorId">Id of the color to retrieve</param>
+  /// <response code="200">A single color</response>
+  /// <response code="404">No color found for the specified id</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Color</returns>
+  [HttpGet("{colorId:int}")]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(IColor), StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  public async Task<ActionResult<IColor>> One(int colorId)
+  {
+    try
+    {
+      var color = await _colorsData.One(colorId);
+
+      if (color is null) {
+        var infoMessage = $"Unable to find color with id {colorId}";
+        _logger.LogInformation(infoMessage);
+        return NotFound(infoMessage);
+      } else {
+        return Ok(color);
+      }
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One color failed.");
+      throw new InternalServerErrorException();
     }
   }
 
