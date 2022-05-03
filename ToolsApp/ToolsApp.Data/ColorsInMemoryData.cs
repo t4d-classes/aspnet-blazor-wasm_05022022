@@ -22,10 +22,11 @@ public class ColorsInMemoryData : IColorsData
   {
     var mapperConfig = new MapperConfiguration(config => {
       config.CreateMap<INewColor, ColorDataModel>();
+      config.CreateMap<IColor, ColorDataModel>();
       config.CreateMap<ColorDataModel, ColorModel>().ReverseMap();
     });
 
-    _mapper = mapperConfig.CreateMapper();
+    _mapper = mapperConfig.CreateMapper(); 
   }
 
   public Task<IEnumerable<IColor>> All()

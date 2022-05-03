@@ -1,11 +1,11 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Core.Interfaces.Models;
 
 using ColorModel = ToolsApp.Models.Color;
 using ColorDataModel = ToolsApp.Data.Models.Color;
-using Microsoft.EntityFrameworkCore;
 
 namespace ToolsApp.Data;
 
@@ -40,23 +40,68 @@ public class ColorsSqlServerData : IColorsData
       .ToListAsync();
   }
 
-  public Task<IColor> Append(INewColor color)
+  public async Task<IColor> Append(INewColor color)
   {
-    throw new NotImplementedException();
+    var colorDataModel = _mapper.Map<INewColor, ColorDataModel>(color);
+
+      await _toolsAppContext.AddAsync(colorDataModel);
+      await _toolsAppContext.SaveChangesAsync();
+      _toolsAppContext.ChangeTracker.Clear();
+
+      return _mapper.Map<ColorDataModel, ColorModel>(colorDataModel);
   }
 
-  public Task<IColor?> One(int colorId)
+  public async Task<IColor?> One(int colorId)
   {
-    throw new NotImplementedException();
+    if (_toolsAppContext.Colors is null) {
+        throw new NullReferenceException(
+          "ToolAppsContext.Color cannot be null.");
+      }
+
+    return await _toolsAppContext.Colors
+      .Where(c => c.Id == colorId)
+      .Select(color => _mapper.Map<ColorDataModel, ColorModel>(color))
+      .AsNoTracking()
+      .FirstAsync();    
   }
 
-  public Task Remove(int colorId)
+  public async Task Remove(int colorId)
   {
-    throw new NotImplementedException();
+    if (_toolsAppContext.Colors is null) {
+        throw new NullReferenceException(
+          "ToolAppsContext.Car cannot be null.");
+      }
+
+      var colorDataModel = await _toolsAppContext.Colors.FindAsync(colorId);
+
+      if (colorDataModel is null) {
+        throw new NullReferenceException(
+          $"Unable to find color with id {colorId}");
+      }
+
+      _toolsAppContext.Colors.Remove(colorDataModel);
+      await _toolsAppContext.SaveChangesAsync();
   }
 
-  public Task Replace(IColor color)
+  public async Task Replace(IColor color)
   {
-    throw new NotImplementedException();
+     if (_toolsAppContext.Colors is null) {
+        throw new NullReferenceException(
+          "ToolAppsContext.Car cannot be null.");
+      }
+
+      var oldColorDataModel = await _toolsAppContext.Colors
+        .AsNoTracking()
+        .FirstOrDefaultAsync(c => c.Id == color.Id);
+
+      if (oldColorDataModel is null)
+      {
+        throw new NullReferenceException($"Unable to find color {color.Id}");
+      }
+
+      var colorDataModel = _mapper.Map<IColor, ColorDataModel>(color);
+
+      _toolsAppContext.Update(colorDataModel);
+      await _toolsAppContext.SaveChangesAsync();
   }
 }

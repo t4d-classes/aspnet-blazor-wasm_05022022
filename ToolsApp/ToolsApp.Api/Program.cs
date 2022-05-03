@@ -24,7 +24,7 @@ builder.Services.AddSqlServer<ToolsAppContext>(
 );
 
 builder.Services.AddScoped<IColorsData, ColorsSqlServerData>();
-builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
+builder.Services.AddScoped<ICarsData, CarsSqlServerData>();
 
 builder.Services.AddControllers(options => {
   options.Filters.Add<HttpResponseExceptionFilter>();

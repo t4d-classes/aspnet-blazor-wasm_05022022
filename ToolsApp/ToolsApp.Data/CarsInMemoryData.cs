@@ -26,10 +26,12 @@ public class CarsInMemoryData : ICarsData
   public CarsInMemoryData()
   {
     var mapperConfig = new MapperConfiguration(config => {
+      config.CreateMap<INewCar, CarDataModel>();
+      config.CreateMap<ICar, CarDataModel>();
       config.CreateMap<CarDataModel, CarModel>().ReverseMap();
     });
 
-    _mapper = mapperConfig.CreateMapper();
+    _mapper = mapperConfig.CreateMapper(); 
   }
 
   public Task<IEnumerable<ICar>> All()
