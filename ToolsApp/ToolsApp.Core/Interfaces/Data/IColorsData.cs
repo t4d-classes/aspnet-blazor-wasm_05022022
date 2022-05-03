@@ -8,4 +8,6 @@ public interface IColorsData
   Task<IColor?> One(int colorId);
 
   Task<IColor> Append(INewColor color);
+
+  Task Remove(int colorId);
 }

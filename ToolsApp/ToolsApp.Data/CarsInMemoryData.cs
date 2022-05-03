@@ -41,4 +41,27 @@ public class CarsInMemoryData : ICarsData
         .AsEnumerable<ICar>()
     );
   }
+
+  public Task<ICar?> One(int carId)
+  {
+    return Task.FromResult(_cars
+      .Where(c => c.Id == carId)
+      .Select(c => _mapper.Map<CarDataModel, CarModel>(c))
+      .Cast<ICar>()
+      .SingleOrDefault());
+  }
+
+  public Task Remove(int carId)
+  {
+    var carIndex = _cars.FindIndex(c => c.Id == carId);
+
+    if (carIndex == -1)
+    {
+      throw new IndexOutOfRangeException("Car not found");
+    }
+
+    _cars.RemoveAt(carIndex);
+
+    return Task.CompletedTask;
+  }   
 }

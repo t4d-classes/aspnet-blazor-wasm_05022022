@@ -95,4 +95,42 @@ public class ColorsController: ControllerBase
     }
   }
 
+  /// <summary>
+  /// Remove a color by id.
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  /// 
+  ///     DELETE /colors/1
+  ///     
+  /// </remarks>
+  /// <param name="colorId">Id of color to remove.</param>
+  /// <response code="204">No Content.</response>
+  /// <response code="500">Error occurred.</response>
+  /// <returns>Nothing</returns>
+  [HttpDelete("{colorId:int}")]
+  [ProducesResponseType(typeof(IColor), StatusCodes.Status204NoContent)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  public async Task<ActionResult<IColor>> RemoveColor(
+    int colorId
+  )
+  {
+    try
+    {
+      await _colorsData.Remove(colorId);
+      return NoContent();
+    }
+    catch (IndexOutOfRangeException exc)
+    {
+      var errorMessage = "Unable to find color to remove.";
+      _logger.LogError(exc, errorMessage);
+      return NotFound(errorMessage);
+    }
+    catch (Exception exc)
+    {
+      _logger.LogError(exc, "Remove color failed.");
+      throw new InternalServerErrorException();
+    }
+  }  
+
 }

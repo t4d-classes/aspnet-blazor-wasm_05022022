@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Core.Interfaces.Models;
 using ToolsApp.Models;
@@ -45,5 +46,43 @@ public class CarsController: ControllerBase
       throw;
     }
   }
+
+  /// <summary>
+  /// Remove a car by id.
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  /// 
+  ///     DELETE /cars/1
+  ///     
+  /// </remarks>
+  /// <param name="carId">Id of car to remove.</param>
+  /// <response code="204">No Content.</response>
+  /// <response code="500">Error occurred.</response>
+  /// <returns>Nothing</returns>
+  [HttpDelete("{carId:int}")]
+  [ProducesResponseType(typeof(ICar), StatusCodes.Status204NoContent)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  public async Task<ActionResult<ICar>> RemoveCar(
+    int carId
+  )
+  {
+    try
+    {
+      await _carsData.Remove(carId);
+      return NoContent();
+    }
+    catch (IndexOutOfRangeException exc)
+    {
+      var errorMessage = "Unable to find car to remove.";
+      _logger.LogError(exc, errorMessage);
+      return NotFound(errorMessage);
+    }
+    catch (Exception exc)
+    {
+      _logger.LogError(exc, "Remove car failed.");
+      throw new InternalServerErrorException();
+    }
+  }  
 
 }

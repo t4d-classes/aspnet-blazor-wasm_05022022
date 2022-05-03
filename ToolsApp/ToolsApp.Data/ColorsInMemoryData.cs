@@ -58,4 +58,18 @@ public class ColorsInMemoryData : IColorsData
       .Cast<IColor>()
       .SingleOrDefault());
   }
+
+  public Task Remove(int colorId)
+  {
+    var colorIndex = _colors.FindIndex(c => c.Id == colorId);
+
+    if (colorIndex == -1)
+    {
+      throw new IndexOutOfRangeException("Color not found");
+    }
+
+    _colors.RemoveAt(colorIndex);
+
+    return Task.CompletedTask;
+  }  
 }
