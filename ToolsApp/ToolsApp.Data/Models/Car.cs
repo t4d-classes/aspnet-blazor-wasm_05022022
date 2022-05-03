@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ToolsApp.Data.Models;
 
-internal class Car {
+[Table("Car")]
+public class Car {
 
   public int? Id { get; set; }
 

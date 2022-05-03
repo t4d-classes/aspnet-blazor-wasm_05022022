@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ToolsApp.Data.Models;
 
-internal class Color {
+[Table("Color")]
+public class Color {
 
   public int? Id { get; set; }
 

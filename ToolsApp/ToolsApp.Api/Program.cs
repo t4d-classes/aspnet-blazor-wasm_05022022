@@ -1,5 +1,7 @@
 using Serilog;
 using Serilog.Events;
+using Microsoft.EntityFrameworkCore;
+
 using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Data;
@@ -17,7 +19,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 
-builder.Services.AddSingleton<IColorsData, ColorsInMemoryData>();
+builder.Services.AddSqlServer<ToolsAppContext>(
+  builder.Configuration.GetConnectionString("App")
+);
+
+builder.Services.AddSingleton<IColorsData, ColorsSqlServerData>();
 builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
 
 builder.Services.AddControllers(options => {
