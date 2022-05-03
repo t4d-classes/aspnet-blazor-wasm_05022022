@@ -1,8 +1,12 @@
 namespace ToolsApp.Core.Interfaces.Models;
 
-public interface IColor
+public interface INewColor
 {
-  int? Id {get; set;}
   string? Name {get; set;}
   string? Hexcode { get; set; }
+}
+
+public interface IColor: INewColor
+{
+  int? Id {get; set;}
 }

@@ -14,4 +14,4 @@ var colorIndex = _colors.FindIndex(c => c.Id == colorId);
 _colors.RemoveAt(colorIndex);
 ```
 
-3. Ensure both endpoints work in the Swagger.
+3. Ensure both endpoints work in Swagger.

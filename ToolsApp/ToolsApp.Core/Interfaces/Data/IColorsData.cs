@@ -6,4 +6,6 @@ public interface IColorsData
 {
   Task<IEnumerable<IColor>> All();
   Task<IColor?> One(int colorId);
+
+  Task<IColor> Append(INewColor color);
 }

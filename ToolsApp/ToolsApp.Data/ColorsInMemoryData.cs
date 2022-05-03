@@ -21,6 +21,7 @@ public class ColorsInMemoryData : IColorsData
   public ColorsInMemoryData()
   {
     var mapperConfig = new MapperConfiguration(config => {
+      config.CreateMap<INewColor, ColorDataModel>();
       config.CreateMap<ColorDataModel, ColorModel>().ReverseMap();
     });
 
@@ -34,6 +35,18 @@ public class ColorsInMemoryData : IColorsData
         .Select(colorDataModel =>
           _mapper.Map<ColorDataModel, ColorModel>(colorDataModel))
         .AsEnumerable<IColor>()
+    );
+  }
+
+  public Task<IColor> Append(INewColor color)
+  {
+    var newColorDataModel = _mapper.Map<ColorDataModel>(color);
+    newColorDataModel.Id = _colors.Any() ? _colors.Max(c => c.Id) + 1 : 1;
+
+    _colors.Add(newColorDataModel);
+
+    return Task.FromResult(
+      _mapper.Map<ColorDataModel, ColorModel>(newColorDataModel) as IColor
     );
   }
 
