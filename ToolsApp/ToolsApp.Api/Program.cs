@@ -2,9 +2,16 @@ using Serilog;
 using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Reflection;
+using Microsoft.Extensions.Options;
+
+
 using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Data;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 Log.Logger = new LoggerConfiguration()
   .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -47,18 +54,61 @@ builder.Services.AddControllers(options => {
   options.Filters.Add<HttpResponseExceptionFilter>();
 });
 
+builder.Services.AddApiVersioning(config => {
+
+  config.DefaultApiVersion = new ApiVersion(1, 0);
+  config.AssumeDefaultVersionWhenUnspecified = true;
+  config.ReportApiVersions = true;
+
+});
+
+builder.Services.AddVersionedApiExplorer(options => {
+
+  options.GroupNameFormat = "'v'VVV"; // major[.minor][-status]
+  options.SubstituteApiVersionInUrl = true;
+
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+builder.Services.AddSwaggerGen(options => {
+
+  options.OperationFilter<SwaggerDefaultValues>();
+
+  var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+  var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+  options.IncludeXmlComments(filePath);
+
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+  app.UseSwagger(options => {
+    options.RouteTemplate = "api-docs/{documentName}/docs.json";
+  });
+
+  app.UseSwaggerUI(options => {
+
+    var provider = app.Services.GetService<IApiVersionDescriptionProvider>();
+
+    if (provider is not null)
+    {
+      options.RoutePrefix = "api-docs";
+      foreach(var description in provider.ApiVersionDescriptions) {
+        options.SwaggerEndpoint(
+          $"/api-docs/{description.GroupName}/docs.json",
+          description.GroupName.ToUpperInvariant()
+        );
+      }
+    }
+
+  });
 }
 
 app.UseHttpsRedirection();

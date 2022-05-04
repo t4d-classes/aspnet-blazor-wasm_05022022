@@ -3,8 +3,9 @@ using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
 
+[Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 [ApiController]
-[Route("v1/[controller]")]
 public class HelloWorldController: ControllerBase
 {
 
