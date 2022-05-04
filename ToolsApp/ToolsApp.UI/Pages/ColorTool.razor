@@ -4,11 +4,7 @@
 
 <ToolHeader HeaderText="Color Tool" />
 
-<ul>
-  @foreach(var color in colors) {
-    <li>@color.Name @color.Hexcode</li>
-  }
-</ul>
+<ColorList Colors="@colors" />
 
 <form>
   <label>
