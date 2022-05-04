@@ -6,8 +6,10 @@ using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
 
+[Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 [ApiController]
-[Route("v1/[controller]")]
 public class ColorsController: ControllerBase
 {
   private ILogger _logger;
@@ -63,7 +65,7 @@ public class ColorsController: ControllerBase
   /// <remarks>
   /// How to call:
   ///   
-  ///   GET /v1/colors/1
+  ///   GET /colors/1
   ///
   /// </remarks>
   /// <param name="colorId">Id of the color to retrieve</param>

@@ -6,8 +6,10 @@ using ToolsApp.Models;
 
 namespace ToolsApp.Api.Controllers;
 
+[Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 [ApiController]
-[Route("v1/[controller]")]
 public class CarsController: ControllerBase
 {
   private ILogger _logger;
@@ -62,6 +64,7 @@ public class CarsController: ControllerBase
   /// <response code="500">Errors occurred.</response>
   /// <returns>Car</returns>
   [HttpGet("{carId:int}")]
+  [MapToApiVersion("1.1")]
   [Produces("application/json")]
   [ProducesResponseType(typeof(ICar), StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
