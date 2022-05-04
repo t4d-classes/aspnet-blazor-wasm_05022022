@@ -64,7 +64,7 @@ public class CarsController: ControllerBase
   /// <response code="500">Errors occurred.</response>
   /// <returns>Car</returns>
   [HttpGet("{carId:int}")]
-  [MapToApiVersion("1.1")]
+  [MapToApiVersion("1.0")]
   [Produces("application/json")]
   [ProducesResponseType(typeof(ICar), StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,7 +72,7 @@ public class CarsController: ControllerBase
   {
     try
     {
-      var car = await _carsData.One(carId);
+      var car = await _carsData.One(2);
 
       if (car is null) {
         var infoMessage = $"Unable to find car with id {carId}";
@@ -88,6 +88,47 @@ public class CarsController: ControllerBase
       throw new InternalServerErrorException();
     }
   }
+
+  /// <summary>
+  /// Return a car for the given id
+  /// </summary>
+  /// <remarks>
+  /// How to call:
+  ///   
+  ///   GET /v1/cars/1
+  ///
+  /// </remarks>
+  /// <param name="carId">Id of the car to retrieve</param>
+  /// <response code="200">A single car</response>
+  /// <response code="404">No car found for the specified id</response>
+  /// <response code="500">Errors occurred.</response>
+  /// <returns>Car</returns>
+  [HttpGet("{carId:int}")]
+  [MapToApiVersion("1.1")]
+  [Produces("application/json")]
+  [ProducesResponseType(typeof(ICar), StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  public async Task<ActionResult<ICar>> OneV1_1(int carId)
+  {
+    try
+    {
+      var car = await _carsData.One(1);
+
+      if (car is null) {
+        var infoMessage = $"Unable to find car with id {carId}";
+        _logger.LogInformation(infoMessage);
+        return NotFound(infoMessage);
+      } else {
+        return Ok(car);
+      }
+    }
+    catch(Exception exc)
+    {
+      _logger.LogError(exc, "One car failed.");
+      throw new InternalServerErrorException();
+    }
+  }
+
 
 
   /// <summary>

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.Data", "ToolsApp.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.Api", "ToolsApp.Api\ToolsApp.Api.csproj", "{263E7478-B5A5-4B5E-AE4A-9517DB992F6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.UI", "ToolsApp.UI\ToolsApp.UI.csproj", "{B89CB189-B204-4CD3-B22C-DEBE53B0D985}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{263E7478-B5A5-4B5E-AE4A-9517DB992F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{263E7478-B5A5-4B5E-AE4A-9517DB992F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{263E7478-B5A5-4B5E-AE4A-9517DB992F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
