@@ -23,8 +23,25 @@ builder.Services.AddSqlServer<ToolsAppContext>(
   builder.Configuration.GetConnectionString("App")
 );
 
-builder.Services.AddScoped<IColorsData, ColorsSqlServerData>();
-builder.Services.AddScoped<ICarsData, CarsSqlServerData>();
+
+if (builder.Configuration["ColorsData"] == "memory")
+{
+  builder.Services.AddSingleton<IColorsData, ColorsInMemoryData>();
+}
+else
+{
+  builder.Services.AddScoped<IColorsData, ColorsSqlServerData>();
+}
+
+if (builder.Configuration["CarsData"] == "memory")
+{
+  builder.Services.AddSingleton<ICarsData, CarsInMemoryData>();
+}
+else
+{
+  builder.Services.AddScoped<ICarsData, CarsSqlServerData>();
+}
+
 
 builder.Services.AddControllers(options => {
   options.Filters.Add<HttpResponseExceptionFilter>();
