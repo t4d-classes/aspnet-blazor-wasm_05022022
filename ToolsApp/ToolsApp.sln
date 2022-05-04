@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.Api", "ToolsApp.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.UI", "ToolsApp.UI\ToolsApp.UI.csproj", "{B89CB189-B204-4CD3-B22C-DEBE53B0D985}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsApp.Components", "ToolsApp.Components\ToolsApp.Components.csproj", "{A30807B2-F14F-470E-B3C6-9B96D4D9E670}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B89CB189-B204-4CD3-B22C-DEBE53B0D985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A30807B2-F14F-470E-B3C6-9B96D4D9E670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A30807B2-F14F-470E-B3C6-9B96D4D9E670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A30807B2-F14F-470E-B3C6-9B96D4D9E670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A30807B2-F14F-470E-B3C6-9B96D4D9E670}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
