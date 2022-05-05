@@ -4,7 +4,7 @@
 
 <ToolHeader HeaderText="Car Tool" />
 
-<CarTable Cars="@cars" />
+<CarTable Cars="@cars" OnDeleteCar="doDeleteCar" />
 
 <form>
   <label>
@@ -27,7 +27,7 @@
     Price:
     <input type="number" @bind="carForm.Price" />
   </label>
-  <button type="button" @onclick="addCar">Add Car</button>
+  <button type="button" @onclick="doAddCar">Add Car</button>
 </form>
 
 @code {
@@ -45,7 +45,7 @@
       },
     };
 
-  private void addCar() {
+  private void doAddCar() {
 
     cars.Add(new() {
       Id=cars.Any() ? cars.Max(c => c.Id) + 1 : 1,
@@ -57,6 +57,11 @@
     });
 
     carForm = new();
+  }
+
+  private void doDeleteCar(int carId) {
+    var carIndex = cars.FindIndex(c => c.Id == carId);
+    cars.RemoveAt(carIndex);
   }
 
   class CarForm {
