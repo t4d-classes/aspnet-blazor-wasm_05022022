@@ -1,17 +1,22 @@
-using Serilog;
-using Serilog.Events;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using System.Reflection;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
 
+
+using Duende.IdentityServer.Services;
+using Serilog;
+using Serilog.Events;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 using ToolsApp.Api.Exceptions;
 using ToolsApp.Core.Interfaces.Data;
 using ToolsApp.Data;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using ToolsApp.Data.Models;
 
 Log.Logger = new LoggerConfiguration()
   .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -32,6 +37,28 @@ try
   builder.Services.AddSqlServer<ToolsAppContext>(
     builder.Configuration.GetConnectionString("App")
   );
+  builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+  builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+      .AddRoles<IdentityRole>()
+      .AddEntityFrameworkStores<ToolsAppContext>();
+
+  builder.Services.AddIdentityServer()
+      .AddApiAuthorization<ApplicationUser, ToolsAppContext>(options => {
+          options.IdentityResources["openid"].UserClaims.Add("name");
+          options.ApiResources.Single().UserClaims.Add("name");
+          options.IdentityResources["openid"].UserClaims.Add("role");
+          options.ApiResources.Single().UserClaims.Add("role");
+      });
+
+
+  builder.Services.AddTransient<IProfileService, ProfileService>();
+
+  JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+
+  builder.Services.AddAuthentication()
+      .AddIdentityServerJwt();
+
 
 
   if (builder.Configuration["ColorsData"] == "memory")
@@ -60,9 +87,11 @@ try
     });
   });
 
-  builder.Services.AddControllers(options => {
+  builder.Services.AddControllersWithViews(options => {
     options.Filters.Add<HttpResponseExceptionFilter>();
   });
+  builder.Services.AddRazorPages();
+
 
   builder.Services.AddApiVersioning(config => {
 
@@ -99,6 +128,10 @@ try
   // Configure the HTTP request pipeline.
   if (app.Environment.IsDevelopment())
   {
+    app.UseMigrationsEndPoint();
+    app.UseWebAssemblyDebugging();
+
+
     app.UseSwagger(options => {
       options.RouteTemplate = "api-docs/{documentName}/docs.json";
     });
@@ -121,13 +154,27 @@ try
     });
 
     app.UseCors(devOrigins);
+  } else {
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
   }
 
   app.UseHttpsRedirection();
 
+  app.UseBlazorFrameworkFiles();
+  app.UseStaticFiles();
+
+  app.UseRouting();
+
+  app.UseIdentityServer();
+  app.UseAuthentication();
   app.UseAuthorization();
 
+
+  app.MapRazorPages();
   app.MapControllers();
+  app.MapFallbackToFile("index.html");
 
   app.Run();
 

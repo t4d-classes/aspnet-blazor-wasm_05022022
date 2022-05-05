@@ -1,0 +1,41 @@
+<tr>
+  <td>@Car?.Id</td>
+  <td>@Car?.Make</td>
+  <td>@Car?.Model</td>
+  <td>@Car?.Year</td>
+  <td>@Car?.Color</td>
+  <td>@Car?.Price</td>
+  <td>
+    <button type="button" @onclick="doEditCar">Edit</button>
+    <button type="button" @onclick="doDeleteCar">Delete</button>
+  </td>
+</tr>
+
+@code {
+
+  [Parameter]
+  public Car? Car { get; set; } = null;
+
+  [Parameter]
+  public EventCallback<int> OnEditCar { get; set; }
+
+
+  [Parameter]
+  public EventCallback<int> OnDeleteCar { get; set; }
+
+  private async Task doEditCar()
+  {
+    if (Car is not null)
+    {
+      await OnEditCar.InvokeAsync(Car.Id);
+    }
+  }
+
+  private async Task doDeleteCar()
+  {
+    if (Car is not null)
+    {
+      await OnDeleteCar.InvokeAsync(Car.Id);
+    }
+  }
+}

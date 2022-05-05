@@ -1,0 +1,53 @@
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Year</th>
+      <th>Color</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @if (!Cars.Any()) {
+      <tr><td colspan="7">No cars.</td></tr>
+    } else {
+      @foreach(var car in Cars) {
+        @if (EditCarId == car.Id) {
+          <CarEditRow Car="@car"
+            OnSaveCar="OnSaveCar"
+            OnCancelCar="OnCancelCar" />
+        } else {
+          <CarViewRow Car="@car"
+            OnEditCar="OnEditCar"
+            OnDeleteCar="OnDeleteCar" />
+        }
+      }
+    }
+  </tbody>
+</table>
+
+@code {
+
+  [Parameter]
+  public IEnumerable<Car> Cars {get; set;} = new List<Car>();
+
+  [Parameter]
+  public int EditCarId {get; set;} = -1;
+
+  [Parameter]
+  public EventCallback<int> OnEditCar {get; set;}
+
+  [Parameter]
+  public EventCallback<int> OnDeleteCar {get; set;}
+
+  [Parameter]
+  public EventCallback<Car> OnSaveCar {get; set;}
+
+  [Parameter]
+  public EventCallback OnCancelCar {get; set;}
+
+
+}

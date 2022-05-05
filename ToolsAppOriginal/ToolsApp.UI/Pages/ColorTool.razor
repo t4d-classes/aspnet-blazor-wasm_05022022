@@ -1,0 +1,31 @@
+﻿@page "/color-tool"
+
+@using Core.Interfaces.Models
+@using ToolsApp.Core.Interfaces.UI
+
+@inject IColorsData colorsData
+
+<PageTitle>Color Tool</PageTitle>
+
+<ToolHeader HeaderText="Color Tool" />
+
+<ColorList Colors="@colors" />
+
+<NewColorForm ButtonText="Add Color" OnSubmitForm="addColor" />
+
+@code {
+
+  private IEnumerable<IColor> colors = new List<IColor>();
+
+  protected async override Task OnInitializedAsync()
+  {
+    colors = await colorsData.All();
+  }
+
+  private async Task addColor(NewColor color) {
+
+    await colorsData.Append(color);
+    colors = await colorsData.All();
+  }
+
+}

@@ -1,0 +1,64 @@
+﻿@page "/car-tool"
+
+<PageTitle>Car Tool</PageTitle>
+
+<ToolHeader HeaderText="Car Tool" />
+
+<CarTable Cars="@cars" EditCarId="@editCarId"
+  OnEditCar="doEditCar" OnDeleteCar="doDeleteCar"
+  OnSaveCar="doSaveCar" OnCancelCar="doCancelCar" />
+
+<NewCarForm ButtonText="Add Car" OnSubmitForm="doAddCar" />
+
+@code {
+
+  private List<Car> cars = new() {
+      new() {
+        Id=1, Make="Ford", Model="Fusion Hybrid",
+        Year=2020, Color="Red", Price=45000,
+      },
+      new() {
+        Id=2, Make="Tesla", Model="S",
+        Year=2019, Color="Black", Price=120000,
+      },
+    };
+
+  private int editCarId = -1;
+
+  private void doEditCar(int carId)
+  {
+    editCarId = carId;
+  }
+
+  private void doCancelCar()
+  {
+    editCarId = -1;
+  }
+
+  private void doAddCar(NewCar car) {
+
+    cars.Add(new() {
+      Id=cars.Any() ? cars.Max(c => c.Id) + 1 : 1,
+      Make=car.Make,
+      Model=car.Model,
+      Year=car.Year,
+      Color=car.Color,
+      Price=car.Price,
+    });
+    editCarId = -1;
+  }
+
+  private void doSaveCar(Car car)
+  {
+    var carIndex = cars.FindIndex(c => c.Id == car.Id);
+    cars[carIndex] = car;
+    editCarId = -1;
+  }
+
+  private void doDeleteCar(int carId) {
+    var carIndex = cars.FindIndex(c => c.Id == carId);
+    cars.RemoveAt(carIndex);
+    editCarId = -1;
+  }
+
+}
