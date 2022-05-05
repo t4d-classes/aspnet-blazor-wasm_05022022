@@ -4,35 +4,13 @@
 
 <ToolHeader HeaderText="Car Tool" />
 
-<CarTable Cars="@cars" OnDeleteCar="doDeleteCar" />
+<CarTable Cars="@cars" EditCarId="@editCarId"
+  OnEditCar="doEditCar" OnDeleteCar="doDeleteCar"
+  OnSaveCar="doSaveCar" OnCancelCar="doCancelCar" />
 
-<form>
-  <label>
-    Make:
-    <input type="text" @bind="carForm.Make" />
-  </label>
-  <label>
-    Model:
-    <input type="text" @bind="carForm.Model" />
-  </label>
-  <label>
-    Year:
-    <input type="number" @bind="carForm.Year" />
-  </label>
-  <label>
-    Color:
-    <input type="text" @bind="carForm.Color" />
-  </label>
-  <label>
-    Price:
-    <input type="number" @bind="carForm.Price" />
-  </label>
-  <button type="button" @onclick="doAddCar">Add Car</button>
-</form>
+<NewCarForm ButtonText="Add Car" OnSubmitForm="doAddCar" />
 
 @code {
-
-  private CarForm carForm = new();
 
   private List<Car> cars = new() {
       new() {
@@ -45,32 +23,42 @@
       },
     };
 
-  private void doAddCar() {
+  private int editCarId = -1;
+
+  private void doEditCar(int carId)
+  {
+    editCarId = carId;
+  }
+
+  private void doCancelCar()
+  {
+    editCarId = -1;
+  }
+
+  private void doAddCar(NewCar car) {
 
     cars.Add(new() {
       Id=cars.Any() ? cars.Max(c => c.Id) + 1 : 1,
-      Make=carForm.Make,
-      Model=carForm.Model,
-      Year=carForm.Year,
-      Color=carForm.Color,
-      Price=carForm.Price,
+      Make=car.Make,
+      Model=car.Model,
+      Year=car.Year,
+      Color=car.Color,
+      Price=car.Price,
     });
+    editCarId = -1;
+  }
 
-    carForm = new();
+  private void doSaveCar(Car car)
+  {
+    var carIndex = cars.FindIndex(c => c.Id == car.Id);
+    cars[carIndex] = car;
+    editCarId = -1;
   }
 
   private void doDeleteCar(int carId) {
     var carIndex = cars.FindIndex(c => c.Id == carId);
     cars.RemoveAt(carIndex);
+    editCarId = -1;
   }
-
-  class CarForm {
-    public string Make { get; set; } = "";
-    public string Model { get; set; } = "";
-    public int Year { get; set; } = 1900;
-    public string Color { get; set; } = "";
-    public decimal Price { get; set; } = 0;
-  }
-
 
 }
