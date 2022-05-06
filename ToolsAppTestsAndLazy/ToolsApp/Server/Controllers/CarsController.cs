@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ToolsApp.Server.Controllers;
 
-[Authorize(Roles="CarTool")]
+// [Authorize(Roles="CarTool")]
 [Route("v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [ApiController]

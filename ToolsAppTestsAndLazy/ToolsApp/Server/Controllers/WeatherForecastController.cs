@@ -4,7 +4,7 @@ using ToolsApp.Shared;
 
 namespace ToolsApp.Server.Controllers
 {
-  [Authorize]
+  // [Authorize]
   [ApiController]
   [Route("[controller]")]
   public class WeatherForecastController : ControllerBase

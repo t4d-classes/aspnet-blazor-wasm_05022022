@@ -112,6 +112,11 @@ public class CarsController: ControllerBase
   {
     try
     {
+      if (carId < 1)
+      {
+        return BadRequest("Car Id cannot be less than 1.");
+      }
+
       var car = await _carsData.One(1);
 
       if (car is null) {

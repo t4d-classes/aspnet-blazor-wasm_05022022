@@ -52,6 +52,13 @@ public class CarsData : BaseData, ICarsData
 
   public async Task Replace(ICar car)
   {
-    await _http.PutAsJsonAsync(elementUrl(car.Id), car as Car);
+    await _http.PutAsJsonAsync(elementUrl(car.Id), new {
+      Id = car.Id,
+      Make = car.Make,
+      Model = car.Model,
+      Year = car.Year,
+      Color = car.Color,
+      Price = car.Price
+    });
   }
 }

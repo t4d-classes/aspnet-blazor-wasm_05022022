@@ -1,26 +1,41 @@
-<form>
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using ToolsApp.Core.Validators
+
+<EditForm Model="@carForm" OnValidSubmit="@doSubmitForm">
+
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
   <label>
     Make:
-    <input type="text" @bind="carForm.Make" />
+    <InputText @bind-Value="carForm.Make" />
+    <ValidationMessage For=@(() => carForm.Make) style="display:inline;" />
   </label>
   <label>
     Model:
-    <input type="text" @bind="carForm.Model" />
+    <InputText @bind-Value="carForm.Model" />
+    <ValidationMessage For=@(() => carForm.Model) style="display:inline;" />
   </label>
   <label>
     Year:
-    <input type="number" @bind="carForm.Year" />
+    <InputNumber @bind-Value="carForm.Year" />
+    <ValidationMessage For=@(() => carForm.Year) style="display:inline;" />
   </label>
   <label>
     Color:
-    <input type="text" @bind="carForm.Color" />
+    <InputText @bind-Value="carForm.Color" />
+    <ValidationMessage For=@(() => carForm.Color) style="display:inline;" />
   </label>
   <label>
     Price:
-    <input type="number" @bind="carForm.Price" />
+    <InputNumber @bind-Value="carForm.Price" />
+    <ValidationMessage For=@(() => carForm.Price) style="display:inline;" />
   </label>
-  <button type="button" @onclick="doSubmitForm">@ButtonText</button>
-</form>
+
+  <button>@ButtonText</button>
+
+</EditForm>
 
 @code {
 
@@ -34,6 +49,7 @@
 
 
   private async Task doSubmitForm() {
+
     await OnSubmitForm.InvokeAsync(new NewCar {
       Make=carForm.Make,
       Model=carForm.Model,
@@ -46,10 +62,16 @@
   }
 
   class CarFormModel {
+    [Required]
     public string Make { get; set; } = "";
+    [Required]
     public string Model { get; set; } = "";
+    [Required]
+    [MinCarYear]
     public int Year { get; set; } = 1900;
+    [Required]
     public string Color { get; set; } = "";
+    [Required]
     public decimal Price { get; set; } = 0;
   }
 }
