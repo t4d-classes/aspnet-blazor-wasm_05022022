@@ -19,10 +19,10 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddApiAuthorization()
     .AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
-builder.Services.AddScoped(sp =>
-  new HttpClient {
-    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
-  });
+// builder.Services.AddScoped(sp =>
+//   new HttpClient {
+//     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+//   });
 
 builder.Services.AddScoped<IColorsData, ColorsData>();
 
