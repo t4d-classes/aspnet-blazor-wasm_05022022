@@ -25,5 +25,6 @@ builder.Services.AddApiAuthorization()
 //   });
 
 builder.Services.AddScoped<IColorsData, ColorsData>();
+builder.Services.AddScoped<ICarsData, CarsData>();
 
 await builder.Build().RunAsync();

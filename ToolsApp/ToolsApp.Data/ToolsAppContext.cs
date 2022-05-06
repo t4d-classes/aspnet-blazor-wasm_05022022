@@ -16,7 +16,7 @@ public class ToolsAppContext: ApiAuthorizationDbContext<ApplicationUser>
     IOptions<OperationalStoreOptions> operationalStoreOptions)
     : base(options, operationalStoreOptions) {
 
-      Database.Migrate();
+      // Database.Migrate();
 
     }
 

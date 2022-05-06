@@ -1,3 +1,5 @@
+@using ToolsApp.Core.Interfaces.Models
+
 <tr>
   <td>@Car?.Id</td>
   <td>@Car?.Make</td>
@@ -14,7 +16,7 @@
 @code {
 
   [Parameter]
-  public Car? Car { get; set; } = null;
+  public ICar? Car { get; set; } = null;
 
   [Parameter]
   public EventCallback<int> OnEditCar { get; set; }

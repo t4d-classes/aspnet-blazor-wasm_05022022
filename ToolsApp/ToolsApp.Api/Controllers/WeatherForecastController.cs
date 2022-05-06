@@ -6,6 +6,7 @@ namespace ToolsApp.Api.Controllers
 {
   [ApiController]
   [Route("v1/[controller]")]
+  [Authorize(Roles="Admin")]
   public class WeatherForecastController : ControllerBase
   {
     private static readonly string[] Summaries = new[]

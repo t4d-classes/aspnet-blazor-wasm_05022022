@@ -1,5 +1,10 @@
 ﻿@page "/car-tool"
 
+@using ToolsApp.Core.Interfaces.Models
+@using ToolsApp.Core.Interfaces.UI
+
+@inject ICarsData carsData
+
 <PageTitle>Car Tool</PageTitle>
 
 <ToolHeader HeaderText="Car Tool" />
@@ -12,18 +17,14 @@
 
 @code {
 
-  private List<Car> cars = new() {
-      new() {
-        Id=1, Make="Ford", Model="Fusion Hybrid",
-        Year=2020, Color="Red", Price=45000,
-      },
-      new() {
-        Id=2, Make="Tesla", Model="S",
-        Year=2019, Color="Black", Price=120000,
-      },
-    };
+  private IEnumerable<ICar> cars = new List<ICar>();
 
   private int editCarId = -1;
+
+  protected async override Task OnInitializedAsync()
+  {
+    cars = await carsData.All();
+  }
 
   private void doEditCar(int carId)
   {
@@ -35,29 +36,22 @@
     editCarId = -1;
   }
 
-  private void doAddCar(NewCar car) {
-
-    cars.Add(new() {
-      Id=cars.Any() ? cars.Max(c => c.Id) + 1 : 1,
-      Make=car.Make,
-      Model=car.Model,
-      Year=car.Year,
-      Color=car.Color,
-      Price=car.Price,
-    });
+  private async Task doAddCar(INewCar car) {
+    await carsData.Append(car);
+    cars = await carsData.All();
     editCarId = -1;
   }
 
-  private void doSaveCar(Car car)
+  private async Task doSaveCar(ICar car)
   {
-    var carIndex = cars.FindIndex(c => c.Id == car.Id);
-    cars[carIndex] = car;
+    await carsData.Replace(car);
+    cars = await carsData.All();
     editCarId = -1;
   }
 
-  private void doDeleteCar(int carId) {
-    var carIndex = cars.FindIndex(c => c.Id == carId);
-    cars.RemoveAt(carIndex);
+  private async Task doDeleteCar(int carId) {
+    await carsData.Remove(carId);
+    cars = await carsData.All();
     editCarId = -1;
   }
 

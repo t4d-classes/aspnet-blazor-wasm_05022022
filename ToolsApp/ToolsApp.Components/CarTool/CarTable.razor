@@ -1,3 +1,5 @@
+@using ToolsApp.Core.Interfaces.Models
+
 <table>
   <thead>
     <tr>
@@ -32,7 +34,7 @@
 @code {
 
   [Parameter]
-  public IEnumerable<Car> Cars {get; set;} = new List<Car>();
+  public IEnumerable<ICar> Cars {get; set;} = new List<ICar>();
 
   [Parameter]
   public int EditCarId {get; set;} = -1;
@@ -44,7 +46,7 @@
   public EventCallback<int> OnDeleteCar {get; set;}
 
   [Parameter]
-  public EventCallback<Car> OnSaveCar {get; set;}
+  public EventCallback<ICar> OnSaveCar {get; set;}
 
   [Parameter]
   public EventCallback OnCancelCar {get; set;}
