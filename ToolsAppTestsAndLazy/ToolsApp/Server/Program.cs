@@ -169,8 +169,8 @@ try
 
   app.UseRouting();
 
-  app.UseAuthentication();
-  app.UseAuthorization();
+  // app.UseAuthentication();
+  // app.UseAuthorization();
 
   app.MapRazorPages();
   app.MapControllers();

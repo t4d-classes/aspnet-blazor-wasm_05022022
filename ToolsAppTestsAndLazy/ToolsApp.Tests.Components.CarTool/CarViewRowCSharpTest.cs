@@ -16,7 +16,8 @@ namespace ToolsApp.Components.UnitTests.CarTool
         Id=1, 
         Make="Ford",
         Model="Fusion Hybrid",
-        Year=2020, Color="blue",
+        Year=2020,
+        Color="blue",
         Price=45000.0M
       };
 
